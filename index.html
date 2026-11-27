@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="...anim-reveal">
+<html lang="en" class="scroll-smooth">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -246,6 +246,21 @@
     transform: none !important;
   }
 }
+body.light-mode {
+  background-color: #f8fafc;
+  color: #0f172a;
+}
+
+body.light-mode .bg-slate-900,
+body.light-mode .bg-gray-900,
+body.light-mode .bg-black {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+}
+
+body.light-mode .text-white {
+  color: #0f172a !important;
+}
 </style>
   </head>
   <body class="antialiased selection:bg-indigo-500/20 selection:text-indigo-600 dark:selection:text-indigo-300">
@@ -318,6 +333,9 @@
         <a href="#projects" class="mobile-nav-link block px-3 py-2.5 rounded-lg text-sm font-medium text-sub hover:text-main hover:bg-slate-100 dark:hover:bg-slate-800/60">Learning Journey</a>
         <a href="#contact" class="mobile-nav-link block px-3 py-2.5 rounded-lg text-sm font-medium text-sub hover:text-main hover:bg-slate-100 dark:hover:bg-slate-800/60">Contact</a>
       </div>
+<button id="theme-toggle" type="button" class="px-3 py-1.5 rounded-lg border text-sm text-sub hover:text-main">
+  Toggle Theme
+</button>
     </header>
     <main class="relative z-10">
       <!-- ======================================================================
@@ -1366,6 +1384,24 @@
     );
 
     elements.forEach((el) => observer.observe(el));
+  })();
+</script>
+<script>
+  (function () {
+    const btn = document.getElementById("theme-toggle");
+    const saved = localStorage.getItem("portfolio-theme");
+
+    if (saved === "light") {
+      document.body.classList.add("light-mode");
+    }
+
+    if (btn) {
+      btn.addEventListener("click", function () {
+        document.body.classList.toggle("light-mode");
+        const isLight = document.body.classList.contains("light- mode");
+        localStorage.setItem("portfolio-theme", isLight ? "light" : "dark");
+      });
+    }
   })();
 </script>
   </body>
