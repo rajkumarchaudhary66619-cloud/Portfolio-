@@ -198,7 +198,55 @@
       backdrop-filter: blur(6px);
       -webkit-backdrop-filter: blur(6px);
     }
-  </style>
+  html {
+  scroll-behavior: smooth;
+}
+
+.anim-reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.65s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+
+.anim-reveal.anim-show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.anim-lift {
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.anim-lift:hover {
+  transform: translateY(-4px);
+}
+
+@keyframes animFloatSlow {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+.anim-float {
+  animation: animFloatSlow 3.5s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .anim-reveal,
+  .anim-lift,
+  .anim-float {
+    animation: none !important;
+    transition: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+</style>
   </head>
   <body class="antialiased selection:bg-indigo-500/20 selection:text-indigo-600 dark:selection:text-indigo-300">
     <!-- Desktop Ambient Spotlight & Custom Cursor Follower -->
@@ -1292,5 +1340,33 @@
       }
     });
   </script>
+<script>
+  (function () {
+    const elements = document.querySelectorAll(".anim-reveal");
+    if (!elements.length) return;
+
+    if (!("IntersectionObserver" in window)) {
+      elements.forEach((el) => el.classList.add("anim-show"));
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("anim-show");
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      {
+        threshold: 0.12,
+        rootMargin: "0px 0px -30px 0px",
+      }
+    );
+
+    elements.forEach((el) => observer.observe(el));
+  })();
+</script>
   </body>
 </html>
