@@ -1,0 +1,1296 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rajkumar Choudhary — CS Student (AIML) Portfolio</title>
+    <!-- Google Fonts: Inter & Space Grotesk -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['Space Grotesk', 'sans-serif'],
+          },
+        },
+      },
+    };
+  </script>
+    <style>
+    /* ==========================================================================
+       1. DESIGN TOKENS & THEME VARIABLES (Swiss-Inspired Light & Dark Mode)
+       ========================================================================== */
+    :root {
+      --bg-primary: #fafafa;
+      --bg-secondary: #ffffff;
+      --bg-tertiary: #f1f5f9;
+      --text-primary: #0f172a;
+      --text-secondary: #475569;
+      --text-muted: #64748b;
+      --border-subtle: rgba(15, 23, 42, 0.09);
+      --border-strong: rgba(15, 23, 42, 0.16);
+      --accent-indigo: #4f46e5;
+      --accent-indigo-soft: rgba(79, 70, 229, 0.08);
+      --accent-emerald: #059669;
+      --accent-emerald-soft: rgba(5, 150, 105, 0.09);
+      --glass-bg: rgba(250, 250, 250, 0.8);
+      --spotlight-color: rgba(79, 70, 229, 0.07);
+      --card-shadow: 0 4px 20px -4px rgba(15, 23, 42, 0.04);
+      --card-shadow-hover: 0 14px 30px -8px rgba(15, 23, 42, 0.09);
+    }
+
+    html.dark {
+      --bg-primary: #090d16;
+      --bg-secondary: #111827;
+      --bg-tertiary: #1e293b;
+      --text-primary: #f8fafc;
+      --text-secondary: #cbd5e1;
+      --text-muted: #94a3b8;
+      --border-subtle: rgba(248, 250, 252, 0.09);
+      --border-strong: rgba(248, 250, 252, 0.18);
+      --accent-indigo: #818cf8;
+      --accent-indigo-soft: rgba(129, 140, 248, 0.13);
+      --accent-emerald: #34d399;
+      --accent-emerald-soft: rgba(52, 211, 153, 0.12);
+      --glass-bg: rgba(9, 13, 22, 0.82);
+      --spotlight-color: rgba(129, 140, 248, 0.09);
+      --card-shadow: 0 4px 20px -4px rgba(0, 0, 0, 0.35);
+      --card-shadow-hover: 0 16px 34px -8px rgba(0, 0, 0, 0.55);
+    }
+
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      font-family: 'Inter', sans-serif;
+      transition: background-color 0.35s ease, color 0.35s ease;
+      overflow-x: hidden;
+    }
+
+    /* ==========================================================================
+       2. GLASSMORPHISM, BORDERS & ELEVATION
+       ========================================================================== */
+    .glass-nav {
+      background-color: var(--glass-bg);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border-subtle);
+      transition: background-color 0.35s ease, border-color 0.35s ease;
+    }
+
+    .swiss-card {
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      box-shadow: var(--card-shadow);
+      transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+                  box-shadow 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+                  border-color 0.28s ease,
+                  background-color 0.35s ease;
+    }
+
+    .swiss-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--card-shadow-hover);
+      border-color: var(--border-strong);
+    }
+
+    .subtle-border {
+      border-color: var(--border-subtle);
+    }
+
+    .text-main { color: var(--text-primary); }
+    .text-sub { color: var(--text-secondary); }
+    .text-muted-token { color: var(--text-muted); }
+
+    /* ==========================================================================
+       3. DESKTOP INTERACTIVE SPOTLIGHT & CUSTOM CURSOR FOLLOWER
+       ========================================================================== */
+    #cursor-spotlight {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+      background: radial-gradient(
+        600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+        var(--spotlight-color),
+        transparent 70%
+      );
+      transition: opacity 0.4s ease;
+    }
+
+    #cursor-dot {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 10px;
+      height: 10px;
+      border-radius: 9999px;
+      background-color: var(--accent-indigo);
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: width 0.2s ease, height 0.2s ease, background-color 0.2s ease, opacity 0.2s ease;
+      opacity: 0;
+    }
+
+    #cursor-ring {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 34px;
+      height: 34px;
+      border-radius: 9999px;
+      border: 1.5px solid var(--accent-indigo);
+      pointer-events: none;
+      z-index: 9998;
+      transform: translate(-50%, -50%);
+      transition: width 0.22s ease, height 0.22s ease, border-color 0.22s ease, opacity 0.2s ease;
+      opacity: 0;
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+      body.has-pointer #cursor-dot,
+      body.has-pointer #cursor-ring {
+        opacity: 1;
+      }
+      body.cursor-hover #cursor-ring {
+        width: 48px;
+        height: 48px;
+        border-color: var(--accent-emerald);
+      }
+      body.cursor-hover #cursor-dot {
+        width: 6px;
+        height: 6px;
+        background-color: var(--accent-emerald);
+      }
+    }
+
+    /* ==========================================================================
+       4. SCROLL REVEAL ANIMATIONS
+       ========================================================================== */
+    .reveal {
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity 0.65s cubic-bezier(0.22, 1, 0.36, 1),
+                  transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .reveal.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ==========================================================================
+       5. THEME ICON TRANSITIONS & MODAL BACKDROP
+       ========================================================================== */
+    .theme-icon {
+      transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease;
+    }
+
+    .modal-backdrop {
+      background-color: rgba(9, 13, 22, 0.6);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+    }
+  </style>
+  </head>
+  <body class="antialiased selection:bg-indigo-500/20 selection:text-indigo-600 dark:selection:text-indigo-300">
+    <!-- Desktop Ambient Spotlight & Custom Cursor Follower -->
+    <div id="cursor-spotlight" aria-hidden="true">
+    </div>
+    <div id="cursor-dot" aria-hidden="true">
+    </div>
+    <div id="cursor-ring" aria-hidden="true">
+    </div>
+    <!-- ========================================================================
+    1. STICKY GLASSMORPHISM NAVIGATION BAR
+    ======================================================================== -->
+    <header class="glass-nav sticky top-0 z-40 w-full">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+        <!-- Brand / Monogram -->
+        <a href="#about" class="interactive-target flex items-center gap-2.5 group focus:outline-none">
+          <span class="w-8 h-8 rounded-lg flex items-center justify-center font-display font-bold text-sm tracking-tight text-white bg-indigo-600 dark:bg-indigo-500 transition-transform duration-200 group-hover:scale-105">
+            RC
+          </span>
+          <span class="font-display font-semibold text-base tracking-tight text-main">
+            Rajkumar Choudhary
+          </span>
+        </a>
+        <!-- Desktop Nav Links -->
+        <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-sub" aria-label="Primary Navigation">
+          <a href="#about" class="interactive-target nav-link hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">About</a>
+          <a href="#skills" class="interactive-target nav-link hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Skills</a>
+          <a href="#projects" class="interactive-target nav-link hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Learning Journey</a>
+          <a href="#contact" class="interactive-target nav-link hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Contact</a>
+        </nav>
+        <!-- Right Controls: Theme Toggle & Mobile Menu Button -->
+        <div class="flex items-center gap-2">
+          <button
+            id="theme-toggle"
+            type="button"
+            aria-label="Toggle dark or light theme"
+            class="interactive-target relative w-10 h-10 rounded-xl border subtle-border flex items-center justify-center bg-white/60 dark:bg-slate-900/60 hover:border-indigo-500/50 transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500/40"
+            >
+            <!-- Sun Icon (shown in Dark Mode) -->
+            <svg id="icon-sun" class="theme-icon w-5 h-5 text-amber-400 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+            </svg>
+            <!-- Moon Icon (shown in Light Mode) -->
+            <svg id="icon-moon" class="theme-icon w-5 h-5 text-slate-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+            </svg>
+          </button>
+          <!-- Mobile Menu Toggle -->
+          <button
+            id="mobile-menu-btn"
+            type="button"
+            aria-label="Open navigation menu"
+            aria-expanded="false"
+            class="md:hidden w-10 h-10 rounded-xl border subtle-border flex items-center justify-center bg-white/60 dark:bg-slate-900/60 text-main focus:outline-none"
+            >
+            <svg id="menu-open-icon" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+            <svg id="menu-close-icon" class="w-5 h-5 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+      </div>
+      <!-- Mobile Dropdown Navigation -->
+      <div id="mobile-menu" class="hidden md:hidden border-t subtle-border px-4 pt-3 pb-5 space-y-2 bg-white/95 dark:bg-slate-950/95">
+        <a href="#about" class="mobile-nav-link block px-3 py-2.5 rounded-lg text-sm font-medium text-sub hover:text-main hover:bg-slate-100 dark:hover:bg-slate-800/60">About</a>
+        <a href="#skills" class="mobile-nav-link block px-3 py-2.5 rounded-lg text-sm font-medium text-sub hover:text-main hover:bg-slate-100 dark:hover:bg-slate-800/60">Skills</a>
+        <a href="#projects" class="mobile-nav-link block px-3 py-2.5 rounded-lg text-sm font-medium text-sub hover:text-main hover:bg-slate-100 dark:hover:bg-slate-800/60">Learning Journey</a>
+        <a href="#contact" class="mobile-nav-link block px-3 py-2.5 rounded-lg text-sm font-medium text-sub hover:text-main hover:bg-slate-100 dark:hover:bg-slate-800/60">Contact</a>
+      </div>
+    </header>
+    <main class="relative z-10">
+      <!-- ======================================================================
+      2. PERSONAL INTRODUCTION (HERO SECTION)
+      ====================================================================== -->
+      <section id="about" class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-20 sm:pt-24 sm:pb-28">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+          <!-- Left Editorial Column -->
+          <div class="lg:col-span-8 space-y-7 reveal">
+            <!-- Availability Pill -->
+            <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-medium border subtle-border bg-white/70 dark:bg-slate-900/70 text-sub">
+              <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse">
+              </span>
+              CS Student (AIML) • Open to Learning &amp; Collaborations
+            </div>
+            <!-- Name & Role Tagline -->
+            <div class="space-y-3">
+              <h1 class="font-display text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-main leading-[1.1]">
+                Hi, I’m <span class="text-indigo-600 dark:text-indigo-400">Rajkumar Choudhary</span>.
+              </h1>
+              <p class="font-display text-xl sm:text-2xl font-medium text-sub">
+                CS Student — Artificial Intelligence &amp; Machine Learning (AIML)
+              </p>
+            </div>
+            <!-- Core Quote & Short Engaging Bio -->
+            <div class="space-y-3 max-w-2xl">
+              <blockquote class="pl-4 border-l-2 border-indigo-500 italic text-base sm:text-lg font-medium text-main">
+                “I am curious to learn something new and improve my skills in technological World.”
+              </blockquote>
+              <p class="text-sm sm:text-base text-sub leading-relaxed">
+                As a Computer Science student specializing in AI &amp; Machine Learning, I focus on building strong programming fundamentals from the ground up—starting with structured logic in C and expanding toward data-driven intelligent systems.
+              </p>
+            </div>
+            <!-- Interactive Interests Pill Tags -->
+            <div class="space-y-2.5">
+              <p class="text-xs font-semibold uppercase tracking-wider text-muted-token">
+                Core Interests &amp; Learning Focus <span class="font-normal normal-case">(Click to explore)</span>
+              </p>
+              <div id="interest-pills" class="flex flex-wrap gap-2.5" role="group" aria-label="Personal Interests">
+                <button type="button" data-interest="Writing clean, structured programs in C to understand memory management, pointers, and low-level execution." class="interactive-target interest-pill px-3.5 py-2 rounded-xl text-xs sm:text-sm font-medium border subtle-border bg-white dark:bg-slate-900 text-sub hover:border-indigo-500/50 transition-all">
+                  ⌘ C Programming
+                </button>
+                <button type="button" data-interest="Exploring the mathematical and algorithmic foundations behind Artificial Intelligence and Machine Learning models." class="interactive-target interest-pill px-3.5 py-2 rounded-xl text-xs sm:text-sm font-medium border subtle-border bg-white dark:bg-slate-900 text-sub hover:border-indigo-500/50 transition-all">
+                  ✦ AI &amp; Machine Learning
+                </button>
+                <button type="button" data-interest="Breaking down complex problems into step-by-step flowcharts, dry runs, and efficient algorithms." class="interactive-target interest-pill px-3.5 py-2 rounded-xl text-xs sm:text-sm font-medium border subtle-border bg-white dark:bg-slate-900 text-sub hover:border-indigo-500/50 transition-all">
+                  ⚡ Problem Solving
+                </button>
+                <button type="button" data-interest="Staying curious about emerging developer tools, open-source workflows, and real-world software engineering." class="interactive-target interest-pill px-3.5 py-2 rounded-xl text-xs sm:text-sm font-medium border subtle-border bg-white dark:bg-slate-900 text-sub hover:border-indigo-500/50 transition-all">
+                  ◎ Tech Exploration
+                </button>
+              </div>
+              <!-- Live Interest Insight Readout -->
+              <p id="interest-detail" class="text-xs sm:text-sm text-indigo-600 dark:text-indigo-400 min-h-[1.25rem] transition-opacity duration-200">
+              </p>
+            </div>
+            <!-- Primary CTA Buttons -->
+            <div class="flex flex-wrap items-center gap-3.5 pt-2">
+              <a href="https://www.linkedin.com/in/rajkumar-chaudhary-582966432" target="_blank" rel="noopener noreferrer" class="interactive-target inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 shadow-sm transition-all">
+                Connect on LinkedIn
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                </svg>
+              </a>
+              <a href="https://github.com/rajkumarchaudhary66619-cloud" target="_blank" rel="noopener noreferrer" class="interactive-target inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl text-sm font-semibold border subtle-border bg-white dark:bg-slate-900 text-main hover:border-indigo-500/50 transition-all">
+                GitHub Profile
+              </a>
+            </div>
+          </div>
+          <!-- Right Editorial Snapshot Card -->
+          <div class="lg:col-span-4 reveal">
+            <div class="swiss-card rounded-2xl p-6 sm:p-7 space-y-6">
+              <div class="flex items-center justify-between border-b subtle-border pb-4">
+                <div class="flex items-center gap-3.5">
+                  <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-600 to-emerald-500 flex items-center justify-center text-white font-display font-bold text-lg shadow-sm">
+                    RC
+                  </div>
+                  <div>
+                    <h2 class="font-display font-semibold text-base text-main">Rajkumar Choudhary</h2>
+                    <p class="text-xs text-muted-token">CS Student • AIML Track</p>
+                  </div>
+                </div>
+                <span class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
+                  Active Learner
+                </span>
+              </div>
+              <!-- Key Highlights Grid -->
+              <div class="grid grid-cols-2 gap-3.5">
+                <div class="p-3.5 rounded-xl border subtle-border bg-slate-50/70 dark:bg-slate-800/40">
+                  <p class="font-display text-xl font-bold text-main">C Lang</p>
+                  <p class="text-xs text-muted-token mt-0.5">Primary Core Skill</p>
+                </div>
+                <div class="p-3.5 rounded-xl border subtle-border bg-slate-50/70 dark:bg-slate-800/40">
+                  <p class="font-display text-xl font-bold text-main">AIML</p>
+                  <p class="text-xs text-muted-token mt-0.5">Specialization Track</p>
+                </div>
+              </div>
+              <!-- Current Focus -->
+              <div class="space-y-2.5 text-xs sm:text-sm">
+                <div class="flex items-center justify-between">
+                  <span class="text-muted-token">Current Stage</span>
+                  <span class="font-medium text-main">Hands-on Learning</span>
+                </div>
+                <div class="flex items-center justify-between">
+                  <span class="text-muted-token">GitHub Handle</span>
+                  <span class="font-medium text-main truncate max-w-[165px]">rajkumarchaudhary66619-cloud</span>
+                </div>
+                <div class="flex items-center justify-between">
+                  <span class="text-muted-token">Core Mindset</span>
+                  <span class="font-medium text-emerald-600 dark:text-emerald-400">Curious &amp; Consistent</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- ======================================================================
+      3. SKILLS SECTION (WITH INTERACTIVE CONCEPT BREAKDOWN)
+      ====================================================================== -->
+      <section id="skills" class="border-t subtle-border py-20 sm:py-24">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <!-- Section Header + Filter Controls -->
+          <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 reveal">
+            <div class="space-y-2">
+              <span class="text-xs font-semibold uppercase tracking-widest text-indigo-600 dark:text-indigo-400">
+                Capabilities &amp; Foundations
+              </span>
+              <h2 class="font-display text-3xl sm:text-4xl font-bold tracking-tight text-main">
+                Skills &amp; Core Focus
+              </h2>
+              <p class="text-sm sm:text-base text-sub max-w-xl">
+                Building a rock-solid Computer Science foundation through C programming, structured problem solving, and AI/ML exploration.
+              </p>
+            </div>
+            <!-- Interactive Filter Tabs -->
+            <div class="inline-flex p-1 rounded-xl border subtle-border bg-white/80 dark:bg-slate-900/80 self-start" role="tablist" aria-label="Filter skills by category">
+              <button type="button" data-filter="all" class="interactive-target skill-filter-btn active px-4 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-all bg-indigo-600 text-white">
+                All Skills
+              </button>
+              <button type="button" data-filter="technical" class="interactive-target skill-filter-btn px-4 py-2 rounded-lg text-xs sm:text-sm font-semibold text-sub hover:text-main transition-all">
+                C Programming
+              </button>
+              <button type="button" data-filter="creative" class="interactive-target skill-filter-btn px-4 py-2 rounded-lg text-xs sm:text-sm font-semibold text-sub hover:text-main transition-all">
+                AIML &amp; Problem Solving
+              </button>
+            </div>
+          </div>
+          <!-- Two Balanced Category Columns -->
+          <div id="skills-grid" class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Category 1: Primary Technical Skill — C Programming -->
+            <div data-category="technical" class="skill-group swiss-card rounded-2xl p-6 sm:p-8 space-y-6 reveal">
+              <div class="flex items-center justify-between border-b subtle-border pb-4">
+                <div class="flex items-center gap-3">
+                  <span class="w-9 h-9 rounded-xl bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 flex items-center justify-center font-display font-bold text-base">
+                    C
+                  </span>
+                  <div>
+                    <h3 class="font-display text-lg font-bold text-main">C Programming (Primary Skill)</h3>
+                    <p class="text-xs text-muted-token">Core Language Concepts &amp; Syntax Mastery</p>
+                  </div>
+                </div>
+                <span class="text-xs font-medium px-2.5 py-1 rounded-md bg-indigo-500/10 text-indigo-600 dark:text-indigo-400">Core Focus</span>
+              </div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                <div class="p-3.5 rounded-xl border subtle-border hover:border-indigo-500/40 transition-colors bg-slate-50/50 dark:bg-slate-800/30">
+                  <div class="flex items-center justify-between">
+                    <span class="font-semibold text-sm text-main">Control Flow &amp; Loops</span>
+                    <span class="text-[11px] font-medium text-indigo-600 dark:text-indigo-400">Practicing</span>
+                  </div>
+                  <p class="text-xs text-muted-token mt-1">Conditionals, switch-case, nested loops &amp; pattern logic</p>
+                </div>
+                <div class="p-3.5 rounded-xl border subtle-border hover:border-indigo-500/40 transition-colors bg-slate-50/50 dark:bg-slate-800/30">
+                  <div class="flex items-center justify-between">
+                    <span class="font-semibold text-sm text-main">Functions &amp; Recursion</span>
+                    <span class="text-[11px] font-medium text-indigo-600 dark:text-indigo-400">Practicing</span>
+                  </div>
+                  <p class="text-xs text-muted-token mt-1">Modular code design, call stack &amp; recursive problem solving</p>
+                </div>
+                <div class="p-3.5 rounded-xl border subtle-border hover:border-indigo-500/40 transition-colors bg-slate-50/50 dark:bg-slate-800/30">
+                  <div class="flex items-center justify-between">
+                    <span class="font-semibold text-sm text-main">Arrays &amp; Strings</span>
+                    <span class="text-[11px] font-medium text-indigo-600 dark:text-indigo-400">Practicing</span>
+                  </div>
+                  <p class="text-xs text-muted-token mt-1">1D/2D matrix traversal, sorting, searching &amp; character handling</p>
+                </div>
+                <div class="p-3.5 rounded-xl border subtle-border hover:border-indigo-500/40 transition-colors bg-slate-50/50 dark:bg-slate-800/30">
+                  <div class="flex items-center justify-between">
+                    <span class="font-semibold text-sm text-main">Pointers &amp; Memory</span>
+                    <span class="text-[11px] font-medium text-emerald-600 dark:text-emerald-400">Learning</span>
+                  </div>
+                  <p class="text-xs text-muted-token mt-1">Memory addresses, pointer arithmetic &amp; structures</p>
+                </div>
+              </div>
+            </div>
+            <!-- Category 2: Problem Solving & AIML Foundations -->
+            <div data-category="creative" class="skill-group swiss-card rounded-2xl p-6 sm:p-8 space-y-6 reveal">
+              <div class="flex items-center justify-between border-b subtle-border pb-4">
+                <div class="flex items-center gap-3">
+                  <span class="w-9 h-9 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
+                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                    </svg>
+                  </span>
+                  <div>
+                    <h3 class="font-display text-lg font-bold text-main">AIML &amp; Problem Solving</h3>
+                    <p class="text-xs text-muted-token">Analytical Thinking &amp; Domain Growth</p>
+                  </div>
+                </div>
+                <span class="text-xs font-medium px-2.5 py-1 rounded-md bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">CS (AIML)</span>
+              </div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                <div class="p-3.5 rounded-xl border subtle-border hover:border-emerald-500/40 transition-colors bg-slate-50/50 dark:bg-slate-800/30">
+                  <div class="flex items-center justify-between">
+                    <span class="font-semibold text-sm text-main">Problem Solving &amp; Logic</span>
+                    <span class="text-[11px] font-medium text-emerald-600 dark:text-emerald-400">Active</span>
+                  </div>
+                  <p class="text-xs text-muted-token mt-1">Algorithmic thinking, flowcharts, dry-run debugging</p>
+                </div>
+                <div class="p-3.5 rounded-xl border subtle-border hover:border-emerald-500/40 transition-colors bg-slate-50/50 dark:bg-slate-800/30">
+                  <div class="flex items-center justify-between">
+                    <span class="font-semibold text-sm text-main">AI &amp; ML Foundations</span>
+                    <span class="text-[11px] font-medium text-emerald-600 dark:text-emerald-400">Exploring</span>
+                  </div>
+                  <p class="text-xs text-muted-token mt-1">Core AI concepts, mathematics for ML &amp; data intuition</p>
+                </div>
+                <div class="p-3.5 rounded-xl border subtle-border hover:border-emerald-500/40 transition-colors bg-slate-50/50 dark:bg-slate-800/30">
+                  <div class="flex items-center justify-between">
+                    <span class="font-semibold text-sm text-main">Git &amp; GitHub Workflow</span>
+                    <span class="text-[11px] font-medium text-emerald-600 dark:text-emerald-400">Building</span>
+                  </div>
+                  <p class="text-xs text-muted-token mt-1">Version control basics, repositories &amp; code documentation</p>
+                </div>
+                <div class="p-3.5 rounded-xl border subtle-border hover:border-emerald-500/40 transition-colors bg-slate-50/50 dark:bg-slate-800/30">
+                  <div class="flex items-center justify-between">
+                    <span class="font-semibold text-sm text-main">Continuous Learning</span>
+                    <span class="text-[11px] font-medium text-emerald-600 dark:text-emerald-400">Core Trait</span>
+                  </div>
+                  <p class="text-xs text-muted-token mt-1">Curiosity-driven practice and rapid skill adaptation</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- ======================================================================
+      4. LEARNING JOURNEY & UPCOMING BUILDS SECTION
+      ====================================================================== -->
+      <section id="projects" class="border-t subtle-border py-20 sm:py-24">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="space-y-2 mb-12 reveal">
+            <span class="text-xs font-semibold uppercase tracking-widest text-indigo-600 dark:text-indigo-400">
+              Growth Roadmap
+            </span>
+            <h2 class="font-display text-3xl sm:text-4xl font-bold tracking-tight text-main">
+              Learning Journey &amp; Upcoming Builds
+            </h2>
+            <p class="text-sm sm:text-base text-sub max-w-2xl">
+              Currently focused on mastering programming fundamentals before shipping full-scale projects. Click any milestone card to inspect what I am practicing and planning next.
+            </p>
+          </div>
+          <!-- 2x2 Responsive Learning Milestones Grid -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
+            <!-- Milestone 1 -->
+            <article
+              data-project-id="0"
+              tabindex="0"
+              role="button"
+              aria-label="Inspect Phase 1: Mastering C Programming Fundamentals"
+              class="interactive-target project-card swiss-card rounded-2xl p-6 sm:p-7 flex flex-col justify-between cursor-pointer group reveal focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              >
+              <div class="space-y-4">
+                <div class="flex items-center justify-between gap-2">
+                  <span class="px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
+                    Phase 01 • In Progress
+                  </span>
+                  <span class="text-xs font-medium text-muted-token group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors flex items-center gap-1">
+                    Details
+                    <svg class="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                  </span>
+                </div>
+                <h3 class="font-display text-xl font-bold text-main group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+                  Mastering C Programming Fundamentals
+                </h3>
+                <p class="text-sm text-sub leading-relaxed">
+                  Daily hands-on coding practice covering variables, operators, loops, functions, arrays, strings, and pointers to build clean algorithmic logic.
+                </p>
+              </div>
+              <div class="pt-6 mt-6 border-t subtle-border space-y-3">
+                <div class="flex items-center justify-between text-xs">
+                  <span class="text-muted-token">Current Status</span>
+                  <span class="font-semibold text-emerald-600 dark:text-emerald-400">Active Daily Practice</span>
+                </div>
+                <div class="flex flex-wrap gap-2">
+                  <span class="px-2.5 py-1 rounded-md text-xs border subtle-border text-muted-token">C Language</span>
+                  <span class="px-2.5 py-1 rounded-md text-xs border subtle-border text-muted-token">Logic Building</span>
+                  <span class="px-2.5 py-1 rounded-md text-xs border subtle-border text-muted-token">Debugging</span>
+                </div>
+              </div>
+            </article>
+            <!-- Milestone 2 -->
+            <article
+              data-project-id="1"
+              tabindex="0"
+              role="button"
+              aria-label="Inspect Phase 2: Console-Based C Mini-Projects"
+              class="interactive-target project-card swiss-card rounded-2xl p-6 sm:p-7 flex flex-col justify-between cursor-pointer group reveal focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              >
+              <div class="space-y-4">
+                <div class="flex items-center justify-between gap-2">
+                  <span class="px-3 py-1 rounded-full text-xs font-semibold bg-indigo-500/10 text-indigo-600 dark:text-indigo-400">
+                    Phase 02 • Planned Build
+                  </span>
+                  <span class="text-xs font-medium text-muted-token group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors flex items-center gap-1">
+                    Details
+                    <svg class="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                  </span>
+                </div>
+                <h3 class="font-display text-xl font-bold text-main group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+                  Console-Based C Mini-Projects
+                </h3>
+                <p class="text-sm text-sub leading-relaxed">
+                  Upcoming beginner builds including a Student Record Management System and Number Guessing / Calculator CLI tools to apply structures and file handling.
+                </p>
+              </div>
+              <div class="pt-6 mt-6 border-t subtle-border space-y-3">
+                <div class="flex items-center justify-between text-xs">
+                  <span class="text-muted-token">Target Milestone</span>
+                  <span class="font-semibold text-indigo-600 dark:text-indigo-400">First GitHub Repositories</span>
+                </div>
+                <div class="flex flex-wrap gap-2">
+                  <span class="px-2.5 py-1 rounded-md text-xs border subtle-border text-muted-token">Structs &amp; Files</span>
+                  <span class="px-2.5 py-1 rounded-md text-xs border subtle-border text-muted-token">CLI Apps</span>
+                  <span class="px-2.5 py-1 rounded-md text-xs border subtle-border text-muted-token">GitHub</span>
+                </div>
+              </div>
+            </article>
+            <!-- Milestone 3 -->
+            <article
+              data-project-id="2"
+              tabindex="0"
+              role="button"
+              aria-label="Inspect Phase 3: Data Structures & Algorithmic Thinking"
+              class="interactive-target project-card swiss-card rounded-2xl p-6 sm:p-7 flex flex-col justify-between cursor-pointer group reveal focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              >
+              <div class="space-y-4">
+                <div class="flex items-center justify-between gap-2">
+                  <span class="px-3 py-1 rounded-full text-xs font-semibold bg-indigo-500/10 text-indigo-600 dark:text-indigo-400">
+                    Phase 03 • Next Step
+                  </span>
+                  <span class="text-xs font-medium text-muted-token group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors flex items-center gap-1">
+                    Details
+                    <svg class="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                  </span>
+                </div>
+                <h3 class="font-display text-xl font-bold text-main group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+                  Data Structures &amp; Algorithmic Thinking
+                </h3>
+                <p class="text-sm text-sub leading-relaxed">
+                  Implementing stacks, queues, linked lists, and sorting algorithms in C to understand time and space complexity deeply.
+                </p>
+              </div>
+              <div class="pt-6 mt-6 border-t subtle-border space-y-3">
+                <div class="flex items-center justify-between text-xs">
+                  <span class="text-muted-token">Focus Area</span>
+                  <span class="font-semibold text-emerald-600 dark:text-emerald-400">Core CS Fundamentals</span>
+                </div>
+                <div class="flex flex-wrap gap-2">
+                  <span class="px-2.5 py-1 rounded-md text-xs border subtle-border text-muted-token">Data Structures</span>
+                  <span class="px-2.5 py-1 rounded-md text-xs border subtle-border text-muted-token">Sorting &amp; Search</span>
+                  <span class="px-2.5 py-1 rounded-md text-xs border subtle-border text-muted-token">Complexity</span>
+                </div>
+              </div>
+            </article>
+            <!-- Milestone 4 -->
+            <article
+              data-project-id="3"
+              tabindex="0"
+              role="button"
+              aria-label="Inspect Phase 4: AI & Machine Learning Starter Lab"
+              class="interactive-target project-card swiss-card rounded-2xl p-6 sm:p-7 flex flex-col justify-between cursor-pointer group reveal focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              >
+              <div class="space-y-4">
+                <div class="flex items-center justify-between gap-2">
+                  <span class="px-3 py-1 rounded-full text-xs font-semibold bg-amber-500/15 text-amber-700 dark:text-amber-300">
+                    Phase 04 • AIML Track
+                  </span>
+                  <span class="text-xs font-medium text-muted-token group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors flex items-center gap-1">
+                    Details
+                    <svg class="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                  </span>
+                </div>
+                <h3 class="font-display text-xl font-bold text-main group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+                  AI &amp; Machine Learning Starter Lab
+                </h3>
+                <p class="text-sm text-sub leading-relaxed">
+                  Transitioning into Python, data analysis, and foundational machine learning models as part of my CS (AIML) curriculum.
+                </p>
+              </div>
+              <div class="pt-6 mt-6 border-t subtle-border space-y-3">
+                <div class="flex items-center justify-between text-xs">
+                  <span class="text-muted-token">Long-Term Goal</span>
+                  <span class="font-semibold text-amber-700 dark:text-amber-300">Intelligent ML Applications</span>
+                </div>
+                <div class="flex flex-wrap gap-2">
+                  <span class="px-2.5 py-1 rounded-md text-xs border subtle-border text-muted-token">AI Concepts</span>
+                  <span class="px-2.5 py-1 rounded-md text-xs border subtle-border text-muted-token">Data Science</span>
+                  <span class="px-2.5 py-1 rounded-md text-xs border subtle-border text-muted-token">ML Models</span>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+      <!-- ======================================================================
+      5. CONTACT SECTION (LINKEDIN, GITHUB & INTERACTIVE MESSAGE FORM)
+      ====================================================================== -->
+      <section id="contact" class="border-t subtle-border py-20 sm:py-24">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-start">
+            <!-- Left Column: Direct Profile Links & Copy Handle -->
+            <div class="lg:col-span-5 space-y-6 reveal">
+              <div class="space-y-2">
+                <span class="text-xs font-semibold uppercase tracking-widest text-indigo-600 dark:text-indigo-400">
+                  Get in Touch
+                </span>
+                <h2 class="font-display text-3xl sm:text-4xl font-bold tracking-tight text-main">
+                  Let’s connect and learn together.
+                </h2>
+                <p class="text-sm sm:text-base text-sub leading-relaxed">
+                  I’m always excited to connect with fellow Computer Science students, mentors, and developers. Feel free to reach out on LinkedIn, explore my GitHub, or drop a message here.
+                </p>
+              </div>
+              <!-- Copy-to-Clipboard GitHub Handle Card -->
+              <div class="swiss-card rounded-2xl p-5 space-y-4">
+                <div class="space-y-1">
+                  <span class="text-xs font-medium text-muted-token">GitHub Username</span>
+                  <div class="flex items-center justify-between gap-2">
+                    <span id="email-text" class="font-display font-semibold text-sm sm:text-base text-main truncate">
+                      rajkumarchaudhary66619-cloud
+                    </span>
+                    <button
+                      id="copy-email-btn"
+                      type="button"
+                      class="interactive-target shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-indigo-600/10 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-600 hover:text-white dark:hover:bg-indigo-500 dark:hover:text-white transition-colors"
+                      >
+                      <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                      </svg>
+                      Copy
+                    </button>
+                  </div>
+                </div>
+                <div class="pt-3 border-t subtle-border flex items-center justify-between text-xs text-sub">
+                  <span class="flex items-center gap-1.5">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500">
+                    </span>
+                    CS (AIML) Undergraduate
+                  </span>
+                  <span class="text-muted-token">Open to Study Groups &amp; Mentorship</span>
+                </div>
+              </div>
+              <!-- Official Social Links -->
+              <div class="space-y-2.5">
+                <p class="text-xs font-semibold uppercase tracking-wider text-muted-token">Official Profiles</p>
+                <div class="grid grid-cols-1 gap-3">
+                  <a href="https://www.linkedin.com/in/rajkumar-chaudhary-582966432" target="_blank" rel="noopener noreferrer" class="interactive-target flex items-center justify-between px-4 py-3 rounded-xl border subtle-border bg-white dark:bg-slate-900 text-xs sm:text-sm font-medium text-main hover:border-indigo-500/50 transition-colors">
+                    <span class="flex items-center gap-2.5">
+                      <svg class="w-4 h-4 text-indigo-600 dark:text-indigo-400" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/>
+                      </svg>
+                      LinkedIn — Rajkumar Chaudhary
+                    </span>
+                    <span class="text-xs text-indigo-600 dark:text-indigo-400 font-semibold">Visit ↗</span>
+                  </a>
+                  <a href="https://github.com/rajkumarchaudhary66619-cloud" target="_blank" rel="noopener noreferrer" class="interactive-target flex items-center justify-between px-4 py-3 rounded-xl border subtle-border bg-white dark:bg-slate-900 text-xs sm:text-sm font-medium text-main hover:border-indigo-500/50 transition-colors">
+                    <span class="flex items-center gap-2.5">
+                      <svg class="w-4 h-4 text-main" fill="currentColor" viewBox="0 0 24 24">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+                      </svg>
+                      GitHub — rajkumarchaudhary66619-cloud
+                    </span>
+                    <span class="text-xs text-indigo-600 dark:text-indigo-400 font-semibold">Visit ↗</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+            <!-- Right Column: Interactive Message Form -->
+            <div class="lg:col-span-7 reveal">
+              <form id="contact-form" novalidate class="swiss-card rounded-2xl p-6 sm:p-8 space-y-5">
+                <div class="border-b subtle-border pb-4">
+                  <h3 class="font-display text-lg font-bold text-main">Send a Message to Rajkumar</h3>
+                  <p class="text-xs text-muted-token mt-0.5">Have a coding tip, project idea, or want to connect? Write below.</p>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div class="space-y-1.5">
+                    <label for="sender-name" class="block text-xs font-semibold text-main">Your Name</label>
+                    <input
+                    id="sender-name"
+                    name="name"
+                    type="text"
+                    required
+                    placeholder="Aman Verma"
+                    class="w-full px-3.5 py-2.5 rounded-xl text-sm border subtle-border bg-slate-50/70 dark:bg-slate-800/50 text-main placeholder:text-slate-400 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all"
+                    />
+                    <p id="error-name" class="text-xs text-rose-500 hidden">Please enter your name.</p>
+                  </div>
+                  <div class="space-y-1.5">
+                    <label for="sender-email" class="block text-xs font-semibold text-main">Email Address</label>
+                    <input
+                    id="sender-email"
+                    name="email"
+                    type="email"
+                    required
+                    placeholder="aman@example.com"
+                    class="w-full px-3.5 py-2.5 rounded-xl text-sm border subtle-border bg-slate-50/70 dark:bg-slate-800/50 text-main placeholder:text-slate-400 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all"
+                    />
+                    <p id="error-email" class="text-xs text-rose-500 hidden">Please enter a valid email address.</p>
+                  </div>
+                </div>
+                <div class="space-y-1.5">
+                  <label for="sender-subject" class="block text-xs font-semibold text-main">Topic</label>
+                  <select
+                    id="sender-subject"
+                    name="subject"
+                    class="w-full px-3.5 py-2.5 rounded-xl text-sm border subtle-border bg-slate-50/70 dark:bg-slate-800/50 text-main focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all"
+                    >
+                    <option value="C Programming / Coding Study Group">C Programming / Coding Study Group</option>
+                    <option value="AI & Machine Learning Discussion">AI &amp; Machine Learning Discussion</option>
+                    <option value="Beginner Project Collaboration">Beginner Project Collaboration</option>
+                    <option value="General Networking">General Networking</option>
+                  </select>
+                </div>
+                <div class="space-y-1.5">
+                  <label for="sender-message" class="block text-xs font-semibold text-main">Message</label>
+                  <textarea
+                    id="sender-message"
+                    name="message"
+                    rows="4"
+                    required
+                    placeholder="Hi Rajkumar, I saw your portfolio and would love to connect..."
+                    class="w-full px-3.5 py-2.5 rounded-xl text-sm border subtle-border bg-slate-50/70 dark:bg-slate-800/50 text-main placeholder:text-slate-400 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all resize-none"
+                    >
+                  </textarea>
+                  <p id="error-message" class="text-xs text-rose-500 hidden">Please include a short message (at least 10 characters).</p>
+                </div>
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-1">
+                  <button
+                    type="submit"
+                    class="interactive-target inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 shadow-sm transition-all"
+                    >
+                    Send Message
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                    </svg>
+                  </button>
+                  <!-- Instant Submission Feedback Banner -->
+                  <p id="form-feedback" class="text-xs sm:text-sm font-medium text-emerald-600 dark:text-emerald-400 hidden" role="status">
+                  </p>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+    <!-- ========================================================================
+    FOOTER
+    ======================================================================== -->
+    <footer class="border-t subtle-border py-8">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-muted-token">
+        <p>© 2026 Rajkumar Choudhary • CS Student (AIML)</p>
+        <a href="#about" class="interactive-target hover:text-main transition-colors">Back to top ↑</a>
+      </div>
+    </footer>
+    <!-- ========================================================================
+    LEARNING MILESTONE DETAIL MODAL
+    ======================================================================== -->
+    <div
+      id="project-modal"
+      class="fixed inset-0 z-50 hidden items-center justify-center p-4 modal-backdrop"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="modal-title"
+      >
+      <div id="modal-panel" class="swiss-card w-full max-w-2xl rounded-2xl p-6 sm:p-8 space-y-6 relative transform transition-all duration-200 scale-95 opacity-0">
+        <!-- Top Bar -->
+        <div class="flex items-start justify-between gap-4 border-b subtle-border pb-4">
+          <div class="space-y-1.5">
+            <span id="modal-category" class="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-indigo-500/10 text-indigo-600 dark:text-indigo-400">
+            </span>
+            <h3 id="modal-title" class="font-display text-2xl font-bold text-main">
+            </h3>
+          </div>
+          <button
+            id="close-modal-btn"
+            type="button"
+            aria-label="Close milestone details"
+            class="interactive-target w-9 h-9 rounded-xl border subtle-border flex items-center justify-center text-sub hover:text-main hover:border-indigo-500/50 transition-colors"
+            >
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+        <!-- Modal Content -->
+        <div class="space-y-4 text-sm text-sub leading-relaxed">
+          <p id="modal-summary">
+          </p>
+          <div class="p-4 rounded-xl border subtle-border bg-slate-50/70 dark:bg-slate-800/40 space-y-2">
+            <p class="text-xs font-semibold uppercase tracking-wider text-main">Key Learning Objectives</p>
+            <ul id="modal-highlights" class="space-y-1.5 text-xs sm:text-sm text-sub list-disc list-inside">
+            </ul>
+          </div>
+          <div class="flex flex-wrap items-center justify-between gap-3 pt-2">
+            <div id="modal-tags" class="flex flex-wrap gap-2">
+            </div>
+            <span id="modal-metric" class="text-xs font-semibold text-emerald-600 dark:text-emerald-400">
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- ========================================================================
+    CLIPBOARD TOAST NOTIFICATION
+    ======================================================================== -->
+    <div
+      id="toast-notification"
+      role="status"
+      aria-live="polite"
+      class="fixed bottom-6 right-6 z-50 flex items-center gap-2.5 px-4 py-3 rounded-xl text-xs sm:text-sm font-medium text-white bg-slate-900 dark:bg-indigo-600 shadow-lg border border-white/10 transform translate-y-16 opacity-0 pointer-events-none transition-all duration-300"
+      >
+      <svg class="w-4 h-4 text-emerald-400 dark:text-white shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+      </svg>
+      <span id="toast-message">Copied to clipboard!</span>
+    </div>
+    <!-- ========================================================================
+    APPLICATION LOGIC (Vanilla ES6+ JavaScript)
+    ======================================================================== -->
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      /* ----------------------------------------------------------------------
+         1. DARK / LIGHT THEME TOGGLE WITH LOCALSTORAGE PERSISTENCE
+         ---------------------------------------------------------------------- */
+      const htmlEl = document.documentElement;
+      const themeToggleBtn = document.getElementById('theme-toggle');
+      const iconSun = document.getElementById('icon-sun');
+      const iconMoon = document.getElementById('icon-moon');
+
+      const applyTheme = (theme) => {
+        if (theme === 'dark') {
+          htmlEl.classList.add('dark');
+          iconSun.classList.remove('hidden');
+          iconMoon.classList.add('hidden');
+        } else {
+          htmlEl.classList.remove('dark');
+          iconMoon.classList.remove('hidden');
+          iconSun.classList.add('hidden');
+        }
+      };
+
+      const savedTheme = localStorage.getItem('portfolio-theme');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      applyTheme(savedTheme || (prefersDark ? 'dark' : 'light'));
+
+      themeToggleBtn.addEventListener('click', () => {
+        const isDark = htmlEl.classList.contains('dark');
+        const nextTheme = isDark ? 'light' : 'dark';
+        applyTheme(nextTheme);
+        localStorage.setItem('portfolio-theme', nextTheme);
+      });
+
+      /* ----------------------------------------------------------------------
+         2. MOBILE NAVIGATION MENU
+         ---------------------------------------------------------------------- */
+      const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+      const mobileMenu = document.getElementById('mobile-menu');
+      const menuOpenIcon = document.getElementById('menu-open-icon');
+      const menuCloseIcon = document.getElementById('menu-close-icon');
+
+      const toggleMobileMenu = (forceClose = false) => {
+        const isHidden = mobileMenu.classList.contains('hidden');
+        const shouldOpen = forceClose ? false : isHidden;
+        mobileMenu.classList.toggle('hidden', !shouldOpen);
+        menuOpenIcon.classList.toggle('hidden', shouldOpen);
+        menuCloseIcon.classList.toggle('hidden', !shouldOpen);
+        mobileMenuBtn.setAttribute('aria-expanded', String(shouldOpen));
+      };
+
+      mobileMenuBtn.addEventListener('click', () => toggleMobileMenu());
+      document.querySelectorAll('.mobile-nav-link').forEach((link) => {
+        link.addEventListener('click', () => toggleMobileMenu(true));
+      });
+
+      /* ----------------------------------------------------------------------
+         3. INTERACTIVE INTERESTS PILLS
+         ---------------------------------------------------------------------- */
+      const interestPills = document.querySelectorAll('.interest-pill');
+      const interestDetail = document.getElementById('interest-detail');
+
+      interestPills.forEach((pill) => {
+        pill.addEventListener('click', () => {
+          const isAlreadyActive = pill.classList.contains('border-indigo-500');
+          interestPills.forEach((p) => {
+            p.classList.remove('border-indigo-500', 'bg-indigo-500/10', 'text-indigo-600', 'dark:text-indigo-400');
+          });
+
+          if (!isAlreadyActive) {
+            pill.classList.add('border-indigo-500', 'bg-indigo-500/10', 'text-indigo-600', 'dark:text-indigo-400');
+            interestDetail.textContent = pill.dataset.interest;
+          } else {
+            interestDetail.textContent = '';
+          }
+        });
+      });
+
+      /* ----------------------------------------------------------------------
+         4. SKILLS CATEGORY FILTERING
+         ---------------------------------------------------------------------- */
+      const filterBtns = document.querySelectorAll('.skill-filter-btn');
+      const skillGroups = document.querySelectorAll('.skill-group');
+      const skillsGrid = document.getElementById('skills-grid');
+
+      filterBtns.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const filter = btn.dataset.filter;
+
+          filterBtns.forEach((b) => {
+            b.classList.remove('bg-indigo-600', 'text-white');
+            b.classList.add('text-sub');
+          });
+          btn.classList.add('bg-indigo-600', 'text-white');
+          btn.classList.remove('text-sub');
+
+          skillGroups.forEach((group) => {
+            if (filter === 'all' || group.dataset.category === filter) {
+              group.classList.remove('hidden');
+            } else {
+              group.classList.add('hidden');
+            }
+          });
+
+          if (filter === 'all') {
+            skillsGrid.classList.add('lg:grid-cols-2');
+            skillsGrid.classList.remove('lg:grid-cols-1', 'max-w-3xl');
+          } else {
+            skillsGrid.classList.remove('lg:grid-cols-2');
+            skillsGrid.classList.add('lg:grid-cols-1', 'max-w-3xl');
+          }
+        });
+      });
+
+      /* ----------------------------------------------------------------------
+         5. LEARNING MILESTONE DETAIL MODAL
+         ---------------------------------------------------------------------- */
+      const projectsData = [
+        {
+          category: 'Phase 01 • In Progress',
+          title: 'Mastering C Programming Fundamentals',
+          summary:
+            'Building a solid programming base by writing and debugging C programs every day. Focus is on understanding how code executes step-by-step rather than memorizing syntax.',
+          highlights: [
+            'Writing clean control flow using if-else, switch statements, and nested loops.',
+            'Breaking problems into reusable functions and practicing recursion.',
+            'Working with 1D/2D arrays, strings, and introductory pointer concepts.'
+          ],
+          tags: ['C Language', 'Control Flow', 'Functions', 'Pointers'],
+          metric: 'Status: Active Daily Practice'
+        },
+        {
+          category: 'Phase 02 • Planned Build',
+          title: 'Console-Based C Mini-Projects',
+          summary:
+            'Preparing to build my first practical C applications and publish them on my GitHub profile (rajkumarchaudhary66619-cloud) with clean README documentation.',
+          highlights: [
+            'Student Record Management System using C structures and file handling.',
+            'Menu-driven Scientific Calculator and Number Guessing CLI utilities.',
+            'Practicing Git commits, repository organization, and code comments.'
+          ],
+          tags: ['Structs & File I/O', 'CLI Programs', 'GitHub'],
+          metric: 'Target: First GitHub Repositories'
+        },
+        {
+          category: 'Phase 03 • Next Step',
+          title: 'Data Structures & Algorithmic Thinking',
+          summary:
+            'Advancing from basic syntax to core Computer Science data structures implemented from scratch in C to strengthen analytical and problem-solving speed.',
+          highlights: [
+            'Implementing linear data structures: Arrays, Linked Lists, Stacks, and Queues.',
+            'Understanding searching (Binary Search) and sorting algorithms.',
+            'Analyzing time and space trade-offs for cleaner code.'
+          ],
+          tags: ['Data Structures', 'Algorithms', 'Problem Solving'],
+          metric: 'Focus: Core CS Foundations'
+        },
+        {
+          category: 'Phase 04 • AIML Track',
+          title: 'AI & Machine Learning Starter Lab',
+          summary:
+            'Connecting strong programming logic with my Artificial Intelligence & Machine Learning specialization through mathematics, data exploration, and beginner ML workflows.',
+          highlights: [
+            'Studying linear algebra, probability, and statistics foundations for AIML.',
+            'Transitioning to Python and scientific libraries for data handling.',
+            'Building introductory classification and prediction experiments.'
+          ],
+          tags: ['AI & ML', 'Mathematics', 'Data Foundations'],
+          metric: 'Goal: Intelligent ML Builds'
+        }
+      ];
+
+      const modal = document.getElementById('project-modal');
+      const modalPanel = document.getElementById('modal-panel');
+      const closeModalBtn = document.getElementById('close-modal-btn');
+
+      const openProjectModal = (index) => {
+        const data = projectsData[index];
+        if (!data) return;
+
+        document.getElementById('modal-category').textContent = data.category;
+        document.getElementById('modal-title').textContent = data.title;
+        document.getElementById('modal-summary').textContent = data.summary;
+        document.getElementById('modal-metric').textContent = data.metric;
+
+        const highlightsEl = document.getElementById('modal-highlights');
+        highlightsEl.innerHTML = data.highlights.map((item) => `<li>${item}</li>`).join('');
+
+        const tagsEl = document.getElementById('modal-tags');
+        tagsEl.innerHTML = data.tags
+          .map((tag) => `<span class="px-2.5 py-1 rounded-md text-xs border subtle-border text-muted-token">${tag}</span>`)
+          .join('');
+
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        requestAnimationFrame(() => {
+          modalPanel.classList.remove('scale-95', 'opacity-0');
+          modalPanel.classList.add('scale-100', 'opacity-100');
+        });
+        document.body.style.overflow = 'hidden';
+      };
+
+      const closeProjectModal = () => {
+        modalPanel.classList.remove('scale-100', 'opacity-100');
+        modalPanel.classList.add('scale-95', 'opacity-0');
+        setTimeout(() => {
+          modal.classList.add('hidden');
+          modal.classList.remove('flex');
+          document.body.style.overflow = '';
+        }, 180);
+      };
+
+      document.querySelectorAll('.project-card').forEach((card) => {
+        const idx = Number(card.dataset.projectId);
+        card.addEventListener('click', () => openProjectModal(idx));
+        card.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            openProjectModal(idx);
+          }
+        });
+      });
+
+      closeModalBtn.addEventListener('click', closeProjectModal);
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeProjectModal();
+      });
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+          closeProjectModal();
+        }
+      });
+
+      /* ----------------------------------------------------------------------
+         6. ONE-CLICK HANDLE COPY WITH TOAST NOTIFICATION
+         ---------------------------------------------------------------------- */
+      const copyEmailBtn = document.getElementById('copy-email-btn');
+      const emailText = document.getElementById('email-text').textContent.trim();
+      const toastEl = document.getElementById('toast-notification');
+      const toastMsg = document.getElementById('toast-message');
+      let toastTimeout;
+
+      const showToast = (message) => {
+        toastMsg.textContent = message;
+        toastEl.classList.remove('translate-y-16', 'opacity-0');
+        clearTimeout(toastTimeout);
+        toastTimeout = setTimeout(() => {
+          toastEl.classList.add('translate-y-16', 'opacity-0');
+        }, 2800);
+      };
+
+      copyEmailBtn.addEventListener('click', () => {
+        const tempInput = document.createElement('textarea');
+        tempInput.value = emailText;
+        tempInput.setAttribute('readonly', '');
+        tempInput.style.position = 'absolute';
+        tempInput.style.left = '-9999px';
+        document.body.appendChild(tempInput);
+        tempInput.select();
+        try {
+          document.execCommand('copy');
+          showToast(`Copied ${emailText} to clipboard`);
+        } catch (err) {
+          showToast('Handle: ' + emailText);
+        }
+        document.body.removeChild(tempInput);
+      });
+
+      /* ----------------------------------------------------------------------
+         7. INTERACTIVE CONTACT FORM VALIDATION & SUBMISSION FEEDBACK
+         ---------------------------------------------------------------------- */
+      const contactForm = document.getElementById('contact-form');
+      const nameInput = document.getElementById('sender-name');
+      const emailInput = document.getElementById('sender-email');
+      const messageInput = document.getElementById('sender-message');
+      const errorName = document.getElementById('error-name');
+      const errorEmail = document.getElementById('error-email');
+      const errorMessage = document.getElementById('error-message');
+      const formFeedback = document.getElementById('form-feedback');
+
+      contactForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        let isValid = true;
+
+        if (nameInput.value.trim().length < 2) {
+          errorName.classList.remove('hidden');
+          isValid = false;
+        } else {
+          errorName.classList.add('hidden');
+        }
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(emailInput.value.trim())) {
+          errorEmail.classList.remove('hidden');
+          isValid = false;
+        } else {
+          errorEmail.classList.add('hidden');
+        }
+
+        if (messageInput.value.trim().length < 10) {
+          errorMessage.classList.remove('hidden');
+          isValid = false;
+        } else {
+          errorMessage.classList.add('hidden');
+        }
+
+        if (!isValid) return;
+
+        formFeedback.textContent = `✓ Thanks, ${nameInput.value.trim()}! Your message for Rajkumar has been noted.`;
+        formFeedback.classList.remove('hidden');
+        showToast('Message sent successfully!');
+        contactForm.reset();
+
+        setTimeout(() => {
+          formFeedback.classList.add('hidden');
+        }, 5000);
+      });
+
+      /* ----------------------------------------------------------------------
+         8. SCROLL-TRIGGERED REVEAL ANIMATIONS (IntersectionObserver)
+         ---------------------------------------------------------------------- */
+      const revealEls = document.querySelectorAll('.reveal');
+      const revealObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('is-visible');
+              revealObserver.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.12 }
+      );
+      revealEls.forEach((el) => revealObserver.observe(el));
+
+      /* ----------------------------------------------------------------------
+         9. DESKTOP AMBIENT SPOTLIGHT & CUSTOM CURSOR FOLLOWER
+         ---------------------------------------------------------------------- */
+      const spotlight = document.getElementById('cursor-spotlight');
+      const cursorDot = document.getElementById('cursor-dot');
+      const cursorRing = document.getElementById('cursor-ring');
+
+      if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+        let mouseX = window.innerWidth / 2;
+        let mouseY = window.innerHeight / 2;
+        let ringX = mouseX;
+        let ringY = mouseY;
+
+        window.addEventListener('mousemove', (e) => {
+          document.body.classList.add('has-pointer');
+          mouseX = e.clientX;
+          mouseY = e.clientY;
+
+          spotlight.style.setProperty('--mouse-x', `${mouseX}px`);
+          spotlight.style.setProperty('--mouse-y', `${mouseY}px`);
+
+          cursorDot.style.left = `${mouseX}px`;
+          cursorDot.style.top = `${mouseY}px`;
+        });
+
+        const animateRing = () => {
+          ringX += (mouseX - ringX) * 0.18;
+          ringY += (mouseY - ringY) * 0.18;
+          cursorRing.style.left = `${ringX}px`;
+          cursorRing.style.top = `${ringY}px`;
+          requestAnimationFrame(animateRing);
+        };
+        animateRing();
+
+        document.querySelectorAll('.interactive-target, a, button, input, textarea, select').forEach((el) => {
+          el.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
+          el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover'));
+        });
+      }
+    });
+  </script>
+  </body>
+</html>
